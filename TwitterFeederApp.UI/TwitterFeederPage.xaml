@@ -1,0 +1,344 @@
+<Page x:Class="TwitterFeederApp.UI.TwitterFeederPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:twitter="using:TwitterFeederApp.Library"
+      xmlns:convertor="using:TwitterFeederApp.UI.Converters"      
+      xmlns:local="using:TwitterFeederApp.UI.DataTemplates"    
+      mc:Ignorable="d">
+    <Page.Resources>
+
+        <convertor:BoolToVisibilityConverter x:Key="BoolToVisibility"/>
+
+        <DataTemplate x:Key="TwitterSchemaTemplate"
+                      x:DataType="twitter:TwitterFeeds">
+            <Border Margin="12,0,12,12"
+                    Padding="12"
+                    Background="White"
+                    BorderBrush="DeepSkyBlue"
+                    BorderThickness="1"
+                    CornerRadius="4">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.RowSpan="2"
+                               Width="50"
+                               Height="50"
+                               Margin="0,0,12,0"
+                               VerticalAlignment="Top"
+                               Source="{Binding Feeder.DisplayPictureUrl}"
+                               Stretch="Uniform" />
+                        <TextBlock Grid.Column="1"
+                                   FontWeight="SemiBold"
+                                   Text="{x:Bind Feeder.Name}" />
+                        <TextBlock Grid.Row="1"
+                                   Grid.Column="1"
+                                   VerticalAlignment="Top"
+                                   FontWeight="Light"
+                                   Text="{x:Bind Feeder.ScreenName}" />
+                        <Image Grid.RowSpan="2"
+                               Grid.Column="2"
+                               Width="24"
+                               Height="24"
+                               VerticalAlignment="Top"
+                               Source="Assets/TwitterFeederAppLogo.png"                               
+                               Stretch="Uniform" />
+                    </Grid>
+                    <TextBlock Grid.Row="1"
+                               FontWeight="SemiBold"
+                               Text="{x:Bind Text}"
+                               TextTrimming="CharacterEllipsis"
+                               TextWrapping="WrapWholeWords" />
+
+                    <StackPanel Grid.Row="2"
+                                HorizontalAlignment="Right"
+                                Orientation="Horizontal">
+                        <TextBlock FontWeight="ExtraLight"
+                                   Text="{x:Bind CreationDate}" />                        
+                    </StackPanel>
+
+                    <!--<Image Grid.Row="3"
+                           Source="{x:Bind Tweets.DefaultMedia.MediaUrl}"/>-->
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+        <DataTemplate x:Key="TwitterEventTemplate"
+                      x:DataType="twitter:TwitterStreamEvent">
+            <Border Margin="12,0,12,12"
+                    Padding="12"
+                    Background="DeepSkyBlue"
+                    BorderBrush="#E2FFF893"
+                    BorderThickness="1"
+                    CornerRadius="4">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.RowSpan="2"
+                               Width="25"
+                               Height="25"
+                               Margin="0,0,12,0"
+                               VerticalAlignment="Top"
+                               Source="{Binding Source.ProfileImageUrl}"
+                               Stretch="Uniform" />
+                        <TextBlock Grid.Column="1"
+                                   FontWeight="SemiBold"
+                                   FontSize="12"
+                                   Text="{x:Bind Source.Name}" />
+                        <TextBlock Grid.Row="1"
+                                   Grid.Column="1"
+                                   VerticalAlignment="Top"
+                                   FontSize="12"
+                                   FontWeight="Light"
+                                   Text="{x:Bind Source.ScreenName}" />                        
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Image Grid.RowSpan="2"
+                               Width="50"
+                               Height="50"
+                               Margin="0,0,12,0"
+                               VerticalAlignment="Top"
+                               Source="{Binding Target.ProfileImageUrl}"
+                               Stretch="Uniform" />
+                        <TextBlock Grid.Column="1"
+                                   FontWeight="SemiBold"
+                                   Text="{x:Bind Target.Name}" />
+                        <TextBlock Grid.Row="1"
+                                   Grid.Column="1"
+                                   VerticalAlignment="Top"
+                                   FontWeight="Light"
+                                   Text="{x:Bind Target.ScreenName}" />
+                        <Image Grid.RowSpan="2"
+                               Grid.Column="2"
+                               Width="24"
+                               Height="24"
+                               VerticalAlignment="Top"
+                               Source="Assets/TwitterFeederAppLogo.png"                               
+                               Stretch="Uniform" />
+                    </Grid>
+                    <TextBlock Grid.Row="2"
+                               FontWeight="SemiBold"
+                               Text="{x:Bind TargetObject.Text}"
+                               TextTrimming="CharacterEllipsis"
+                               TextWrapping="WrapWholeWords" />
+
+                    <StackPanel Grid.Row="3"
+                                HorizontalAlignment="Right"
+                                Orientation="Horizontal">
+                        <TextBlock FontWeight="ExtraLight"
+                                   Text="{x:Bind CreationDate}" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </DataTemplate>
+
+        <!--Template Selector-->
+        <local:TwitterFeederTemplateSelector x:Key="TwitterFeederTemplateSelector" 
+                                       TwitterFeeds="{StaticResource TwitterSchemaTemplate}"
+                                       Events="{StaticResource TwitterEventTemplate}"/>
+        
+    </Page.Resources>
+
+    <Grid MaxWidth="800"
+          Background="LightCyan">
+        <Grid Margin="24"
+              Background="LightBlue"
+              BorderBrush="DeepSkyBlue"
+              BorderThickness="1"
+              CornerRadius="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <StackPanel HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                <Image Width="100"
+                       Height="75"
+                       Margin="24"
+                       Source="Assets/TwitterFeederAppLogo.png"                               
+                       Stretch="Uniform" />                
+            </StackPanel>
+
+            <ScrollViewer Grid.Row="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <!--  Credentials area  -->
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Background="DeepSkyBlue">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="CredentialsBoxExpandButton"
+                                    VerticalAlignment="Stretch"
+                                    Command="{Binding HandleConnectCommand}"                                    
+                                    Content=""
+                                    FontFamily="Segoe MDL2 Assets" />
+                            <TextBlock Grid.Column="1"
+                                       Margin="12,6"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"
+                                       Foreground="Black"
+                                       Text="Credentials" />
+                        </Grid>
+
+                        <StackPanel 
+                            Visibility="{Binding AuthenticationVisibility,
+                                         Converter= {StaticResource BoolToVisibility}}"
+                                    Grid.Row="1"
+                                    Margin="24"
+                                    Orientation="Vertical">
+                            <HyperlinkButton Margin="0,0,0,15"
+                                             Content="Create Twitter App to get consumer key and consumer value"
+                                             NavigateUri="https://apps.twitter.com/" />
+                            <TextBox x:Name="ConsumerKey"
+                                     Margin="0,0,0,12"
+                                     Text="{Binding ApplicationOnlyToken.OAuthConsumerKey,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
+                                     Header="Consumer Key:" />
+                            <TextBox x:Name="ConsumerSecret"
+                                     Margin="0,0,0,12"
+                                     Text="{Binding ApplicationOnlyToken.OAuthConsumerSecret,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
+                                     Header="Consumer Secret:" />
+                            <StackPanel Orientation="Horizontal">
+                            <Button x:Name="ConnectButton"
+                                    Margin="0,10,0,0"
+                                    VerticalAlignment="Bottom"       
+                                    IsEnabled="{Binding ApplicationOnlyToken.IsFieldEmpty}"
+                                    Command="{Binding ConnectCommand}"                                    
+                                    Content="Connect" />
+                                <TextBlock Visibility="Visible"
+                                           Foreground="Red"
+                                           Text="{Binding Error}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+
+                    <!--  Search area  -->
+                    <Grid x:Name="SearchBox"
+                          Visibility="{Binding SearchVisibility,
+                                      Converter={StaticResource BoolToVisibility}}"
+                          Grid.Row="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Background="DeepSkyBlue">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Button x:Name="SearchBoxExpandButton"
+                                    VerticalAlignment="Stretch"
+                                    Command="{Binding HandleSearchCommand}"                                    
+                                    Content=""
+                                    FontFamily="Segoe MDL2 Assets" />
+                            <TextBlock Grid.Column="1"
+                                       Margin="12,6"
+                                       HorizontalAlignment="Left"
+                                       VerticalAlignment="Center"
+                                       Foreground="Black"
+                                       Text="Search: Enter screen name to search" />
+                        </Grid>
+
+                        <StackPanel x:Name="SearchPanel"
+                                    Visibility="{Binding SearchCollapsableVisibility,
+                            Converter={StaticResource BoolToVisibility}}"
+                                    Grid.Row="1"
+                                    Margin="24">
+                            <TextBox x:Name="TagText"
+                                     Margin="0,0,0,12"                                    
+                                     Text="{Binding SearchTag,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}"
+                                     Header="Search tag:" />
+                            <Button x:Name="SearchButton"
+                                    Margin="0,10,0,0"     
+                                    
+                                    Command="{Binding SearchCommand}"      
+                                    IsEnabled="{Binding CanSearch}"
+                                    Content="Search" />
+                            <TextBlock Visibility="Visible"
+                                           Foreground="Red"
+                                           Text="{Binding SearchError}"/>
+                        </StackPanel>
+                    </Grid>                    
+
+                    <!--  Results area  -->
+                    <ListView x:Name="ListView"
+                              Grid.Row="4"
+                              Margin="0,12,0,0"
+                              Visibility="{Binding ResultsVisibility,
+                        Converter={StaticResource BoolToVisibility}}"
+                              ItemsSource="{Binding DataSource}"
+                              IsItemClickEnabled="False"
+                              ItemTemplateSelector="{StaticResource TwitterFeederTemplateSelector}"
+                              SelectionMode="None">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListViewItem">
+                                            <ListViewItemPresenter PointerOverBackground="{x:Null}" />
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+                </Grid>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Page>
+
